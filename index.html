@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BM8 OEM Logo BMP Extractor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    font-family: system-ui, sans-serif;
+    background: #0f1115;
+    color: #eaeaf0;
+    padding: 20px;
+}
+input, button {
+    background: #1b1e26;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+img {
+    display: block;
+    margin-top: 15px;
+    max-width: 100%;
+    border: 1px solid #333;
+    background: #000;
+}
+.info {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<h2>BM8 OEM Logo BMP Extractor</h2>
+
+<input type="file" id="file" accept=".mbn">
+<div class="info" id="info"></div>
+
+<img id="preview">
+<br>
+<button id="download" disabled>Download BMP</button>
+
+<script>
+const fileInput = document.getElementById("file");
+const info = document.getElementById("info");
+const img = document.getElementById("preview");
+const downloadBtn = document.getElementById("download");
+
+let bmpBlob = null;
+
+fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => extractBMP(reader.result);
+    reader.readAsArrayBuffer(file);
+});
+
+function extractBMP(buffer) {
+    const bytes = new Uint8Array(buffer);
+
+    let bmpOffset = -1;
+    for (let i = 0; i < bytes.length - 1; i++) {
+        if (bytes[i] === 0x42 && bytes[i + 1] === 0x4D) { // "BM"
+            bmpOffset = i;
+            break;
+        }
+    }
+
+    if (bmpOffset === -1) {
+        alert("BMP header not found in MBN.");
+        return;
+    }
+
+    bmpBlob = new Blob([bytes.slice(bmpOffset)], { type: "image/bmp" });
+    const url = URL.createObjectURL(bmpBlob);
+
+    img.src = url;
+    downloadBtn.disabled = false;
+
+    info.innerHTML = `
+        BMP header found at offset: <b>${bmpOffset}</b><br>
+        Extracted size: <b>${bmpBlob.size}</b> bytes
+    `;
+}
+
+downloadBtn.onclick = () => {
+    if (!bmpBlob) return;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(bmpBlob);
+    a.download = "oemlogo_extracted.bmp";
+    a.click();
+};
+</script>
+
+</body>
+</html>
