@@ -1,40 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>BM8 OEM Logo BMP Extractor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MBN Boot Logo Extractor</title>
 <style>
-body {
-    font-family: system-ui, sans-serif;
-    background: #0f1115;
-    color: #eaeaf0;
-    padding: 20px;
-}
-input, button {
-    background: #1b1e26;
-    color: #fff;
-    border: 1px solid #333;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-top: 8px;
-}
-img {
-    display: block;
-    margin-top: 15px;
-    max-width: 100%;
-    border: 1px solid #333;
-    background: #000;
-}
-.info {
-    font-size: 0.9rem;
-    opacity: 0.85;
-    margin-top: 10px;
-}
+  :root{color-scheme: dark}
+  html,body{height:100%;margin:0;background:#0f1112;color:#eee;font-family:Inter, ui-sans-serif, system-ui, monospace}
+  .wrap{box-sizing:border-box;max-width:720px;margin:14px auto;padding:12px;text-align:center}
+  input[type=file]{display:block;margin:10px auto}
+  canvas,img{border:1px solid #2a2d30;margin-top:10px;max-width:92%;height:auto;display:none}
+  button{margin:10px;padding:8px 12px;background:#1f6feb;border:none;color:white;border-radius:6px;min-height:44px;cursor:pointer}
+  pre{background:#0b0c0e;color:#cfe8ff;padding:10px;border-radius:6px;overflow:auto;text-align:left;max-height:220px}
+  .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
+  <div class="wrap">
+    <h3 style="margin:6px 0 2px">MBN Boot Logo Extractor</h3>
+    <div class="row">
+      <input id="file" type="file" accept=".bin,*/*">
+      <button id="download" disabled>Download BMP</button>
+    </div>
+    <canvas id="cv" ></canvas>
+    <img id="preview" alt="logo preview">
+    <pre id="log"></pre>
+  </div>
+
+  <script type="module" src="read.js"></script>
+</body>
+</html><body>
 
 <h2>BM8 OEM Logo BMP Extractor</h2>
 
